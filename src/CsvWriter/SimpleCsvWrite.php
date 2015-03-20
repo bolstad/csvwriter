@@ -1,6 +1,7 @@
 <?php
 
 
+namespace CsvWriter;
 
 
 class SimpleCsvWrite {
@@ -9,18 +10,39 @@ class SimpleCsvWrite {
 	private $fileName;
 	private $logFileHeaderSet;
 	private $orderLog;
-	private $folderName = 'data/'; 
-	private $orderLogfileExtension = '.csv';
+	private $folderName = 'data/';
 	private $orderLogfile;
 
-	function __construct( $fileName ) {
-		$this->fileName=$fileName;
+	function __construct( $fileName, $directoryName ) {
+
+		$this->fileName = $fileName;
+		$this->folderName = $directoryName;
+
 		$this->logFileHeaderSet = 0;
-	    $this->orderLogfile=($this->folderName.$this->fileName.'_'.date("o_m_d_Hi").".".$this->orderLogfileExtension);
-	    $this->orderLog = new writeFile($this->orderLogfile);
+
+		$this->verifyDirectory( $directoryName );
+
+		$this->orderLogfile = $directoryName .   '/'. $fileName;
+		$this->orderLog = new writeFile( $this->orderLogfile );
 
 	}
 
+
+	function verifyDirectory( $directoryName ) {
+		// If dir exist everything is fine and dandy
+		if ( file_exists( $directoryName ) && is_dir( $directoryName ) )
+			return 1;
+
+		// If if exist a file with our dirname, abort
+		if ( file_exists( $directoryName ) && !is_dir( $directoryName ) )
+			throw new \Exception( "Exist but is not an directory: $directoryName" );
+
+		// At last, create the dir
+		if ( !mkdir( $directoryName ) )
+			throw new \Exception( "Failed to create directory: $directoryName" );
+
+		return 1;
+	}
 
 	/* From: http://www.php.net/manual/en/function.str-getcsv.php#88773 and http://www.php.net/manual/en/function.str-getcsv.php#91170 */
 	function str_putcsv( $input, $delimiter = ';', $enclosure = '"' ) {
@@ -44,18 +66,10 @@ class SimpleCsvWrite {
 			$orderRowHeader = array_keys( $data );
 			$orderRowHeaderLine = $this->str_putcsv( $orderRowHeader );
 			$this->orderLog->writeLine( $orderRowHeaderLine );
-			echo $orderRowHeaderLine . "\n";
 			$this->logFileHeaderSet++;
-			print_r( $orderRowHeader );
-			//                die;
 		}
-		print_r( $data );
 		$orderRowData = array_values( $data );
 		$orderRowDataLine =  $this->str_putcsv( $orderRowData );
-
-		echo "$orderRowDataLine\n";
-		print_r( $orderRowData );
-
 		$this->orderLog->writeLine( $orderRowDataLine );
 	}
 
