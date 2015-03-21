@@ -2,7 +2,7 @@
 
 namespace CsvWriter;
 
-class writeFile {
+class WriteFile {
   public $lineEnding="\n";
   private $file;
   private $fileHandle;
