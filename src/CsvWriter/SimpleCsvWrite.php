@@ -23,7 +23,7 @@ class SimpleCsvWrite {
 		$this->verifyDirectory( $directoryName );
 
 		$this->orderLogfile = $directoryName .   '/'. $fileName;
-		$this->orderLog = new writeFile( $this->orderLogfile );
+		$this->orderLog = new WriteFile( $this->orderLogfile );
 
 	}
 
