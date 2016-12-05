@@ -45,7 +45,7 @@ class SimpleCsvWrite {
 	}
 
 	/* From: http://www.php.net/manual/en/function.str-getcsv.php#88773 and http://www.php.net/manual/en/function.str-getcsv.php#91170 */
-	function str_putcsv( $input, $delimiter = ';', $enclosure = '"' ) {
+	function str_putcsv( $input, $delimiter = ',', $enclosure = '"' ) {
 		// Open a memory "file" for read/write...
 		$filePipe = fopen( 'php://temp', 'r+' );
 		// ... write the $input array to the "file" using fputcsv()...
